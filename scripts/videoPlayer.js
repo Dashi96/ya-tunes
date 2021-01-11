@@ -7,6 +7,8 @@ export const videoPlayerInit = () => {
   const videoProgress = document.querySelector('.video-progress')
   const videoTimePassed = document.querySelector('.video-time__passed')
   const videoTimeTotal = document.querySelector('.video-time__total')
+  const videoVolume = document.querySelector('.video-volume')
+  const videoFullscreen = document.querySelector('.video-fullscreen')
 
 
   //add animating buttons
@@ -20,7 +22,8 @@ export const videoPlayerInit = () => {
     }
   }
 
-  const togglePlay = () => {
+  const togglePlay = event => {
+    event.preventDefault()
     if (videoPlayer.paused) {
       videoPlayer.play()
     } else {
@@ -35,6 +38,11 @@ export const videoPlayerInit = () => {
 
   //add zero before seconds
   const addZero = n => n < 10 ? '0' + n : n
+
+  const changeValue = () => {
+    const value = videoVolume.value
+    videoPlayer.volume = value / 100
+  }
 
   //add event listener for buttons
   videoPlayer.addEventListener('click', togglePlay)
@@ -69,4 +77,20 @@ export const videoPlayerInit = () => {
 
     videoPlayer.currentTime = (value * duration) / 100
   })
+
+  videoVolume.addEventListener('input', changeValue)
+  changeValue()
+
+  videoFullscreen.addEventListener('click', () => {
+    videoPlayer.requestFullscreen()
+  })
+
+  videoPlayer.addEventListener('volumechange', () => {
+    videoVolume.value = Math.round(videoPlayer.volume * 100)
+  })
+
+  videoPlayerInit.stop = () => {
+    videoPlayer.pause()
+    toggleIcon()
+  }
 }
